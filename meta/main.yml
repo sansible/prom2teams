@@ -1,0 +1,21 @@
+---
+
+galaxy_info:
+  description: "Install Prometheus 2 Teams."
+  license: MIT
+  min_ansible_version: 2.0
+  platforms:
+    - name: Ubuntu
+      versions:
+        - trusty
+  categories:
+    - development
+
+dependencies:
+  - role: sansible.users_and_groups
+    users_and_groups:
+      groups:
+        - name: "{{ sansible_prom2teams.group }}"
+      users:
+        - name: "{{ sansible_prom2teams.user }}"
+          group: "{{ sansible_prom2teams.group }}"

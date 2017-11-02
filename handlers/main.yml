@@ -1,0 +1,7 @@
+---
+
+- name: restart prom2teams
+  become: yes
+  service:
+    name: prom2teams
+    state: restarted

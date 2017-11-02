@@ -1,0 +1,14 @@
+---
+
+sansible_prom2teams:
+  checksum: sha256:407e0311689207b385fb1252f36d3c3119ae9a315e3eba205aaa69d576434ed7
+  config: ~
+  group: prometheus
+  opts: -c /home/prometheus/prom2teams/prom2teams.ini -l /var/log/prometheus/prom2teams.log
+  path:
+    install: /home/prometheus
+    log: /var/log/prometheus
+    pid: /var/run/prometheus
+  port: 8089
+  user: prometheus
+  webhook_url: ~
