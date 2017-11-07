@@ -1,0 +1,11 @@
+---
+
+- name: Install prom2teams
+  include: build.yml
+  tags:
+    - build
+
+- name: Configure prom2teams
+  include: configure.yml
+  tags:
+    - configure

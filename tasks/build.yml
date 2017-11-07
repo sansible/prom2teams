@@ -1,0 +1,86 @@
+---
+
+- name: Create prom2teams directories
+  become: yes
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ sansible_prom2teams.user }}"
+    group: "{{ sansible_prom2teams.group }}"
+    mode: 0750
+  with_items:
+    - "{{ sansible_prom2teams.path.install }}"
+    - "{{ sansible_prom2teams.path.install }}/bin"
+    - "{{ sansible_prom2teams.path.install }}/prom2teams"
+    - "{{ sansible_prom2teams.path.log }}"
+    - "{{ sansible_prom2teams.path.pid }}"
+
+- name: Copy wrapper shell script
+  become: yes
+  copy:
+    dest: "{{ sansible_prom2teams.path.install }}/bin/prometheus_wrapper"
+    group: "{{ sansible_prom2teams.group }}"
+    mode: 0755
+    owner: "{{ sansible_prom2teams.user }}"
+    src: prometheus_wrapper
+
+- name: Add Deadsnakes Repo
+  become: yes
+  apt_repository:
+    repo: "ppa:deadsnakes/ppa"
+    state: present
+
+- name: Install pip
+  become: yes
+  apt:
+    update_cache: yes
+    name: "{{ item }}"
+  with_items:
+    - python-pip
+    - python3-pip
+    - python3.5
+    - python3.5-gdbm
+    - python3-apt
+    - python-apt
+    - pandoc
+
+- name: Install virtualenv
+  become: yes
+  pip:
+    name: virtualenv
+    state: present
+
+- name: Upgrade Pip to 9.0.1
+  become: yes
+  pip:
+    name: pip
+    state: present
+    version: 9.0.1
+    virtualenv: "{{ sansible_prom2teams.path.install }}/prom2teams/.venv"
+    virtualenv_python: python3.5
+
+- name: install other python packages
+  become: yes
+  pip:
+    name: "{{ item }}"
+    state: present
+    virtualenv: "{{ sansible_prom2teams.path.install }}/prom2teams/.venv"
+    virtualenv_python: python3.5
+  with_items:
+    - pypandoc
+    - flake8
+
+- name: Install prom2teams
+  become: yes
+  pip:
+    name: prom2teams
+    state: present
+    virtualenv: "{{ sansible_prom2teams.path.install }}/prom2teams/.venv"
+    virtualenv_python: python3.5
+
+- name: Make prom2teams a service
+  become: yes
+  template:
+    dest: /etc/init.d/prom2teams
+    mode: 0755
+    src: prom2teams.sysvinit.j2

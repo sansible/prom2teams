@@ -1,0 +1,27 @@
+---
+
+- name: Deploy prom2teams defaults
+  become: yes
+  template:
+    dest: /etc/default/prom2teams
+    mode: 0644
+    src: prom2teams.default.j2
+  notify:
+    - restart prom2teams
+
+- name: Deploy config file
+  become: yes
+  become_user: "{{ sansible_prom2teams.user }}"
+  template:
+    dest: "{{ sansible_prom2teams.path.install }}/prom2teams/prom2teams.ini"
+    group: "{{ sansible_prom2teams.group }}"
+    owner: "{{ sansible_prom2teams.user }}"
+    src: prom2teams.ini.j2
+  notify:
+    - restart prom2teams
+
+- name: Ensure prom2teams service is started
+  become: yes
+  service:
+    name: prom2teams
+    state: started
