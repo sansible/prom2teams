@@ -30,7 +30,7 @@
     repo: "ppa:deadsnakes/ppa"
     state: present
 
-- name: Install pip
+- name: Install Python packages
   become: yes
   apt:
     update_cache: yes
@@ -40,6 +40,7 @@
     - python3-pip
     - python3.5
     - python3.5-gdbm
+    - python3.5-dev
     - python3-apt
     - python-apt
     - pandoc
